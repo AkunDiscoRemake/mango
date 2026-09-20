@@ -32,8 +32,8 @@ jobs:
       - name: Build Debug APK
         working-directory: ./RobloxVR
         run: |
-          gradle processDebugResources --stacktrace --info > /tmp/aapt2_err.txt 2>&1 || true
-          grep -i -C 5 "aapt" /tmp/aapt2_err.txt | head -n 40 | while IFS= read -r line; do
+          gradle processDebugResources > /tmp/out.txt 2>&1 || true
+          tail -n 30 /tmp/out.txt | while IFS= read -r line; do
             echo "::error::$line"
           done
           exit 1
