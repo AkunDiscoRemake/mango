@@ -21,15 +21,24 @@ jobs:
 
       - name: Setup Gradle
         uses: gradle/actions/setup-gradle@v3
+        with:
+          gradle-version: '8.5'
+          cache-disabled: true
 
       - name: Build Debug APK
         working-directory: ./RobloxVR
         run: |
-          echo "ANDROID_HOME: $ANDROID_HOME"
-          gradle assembleDebug --no-daemon --stacktrace
+          set +e
+          gradle assembleDebug --no-daemon --stacktrace > /tmp/build.log 2>&1
+          CODE=$?
+          cat /tmp/build.log
+          exit $CODE
 
       - name: Upload APK Artifact
         uses: actions/upload-artifact@v4
+        if: always()
         with:
           name: RobloxVR-apk
-          path: RobloxVR/app/build/outputs/apk/debug/app-debug.apk
+          path: |
+            RobloxVR/app/build/outputs/apk/debug/*.apk
+            /tmp/build.log

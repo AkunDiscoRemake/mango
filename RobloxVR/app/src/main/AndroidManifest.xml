@@ -38,9 +38,8 @@
             android:theme="@style/Theme.RobloxVR.Fullscreen" />
 
         <service
-            android:name=".CaptureService"
-            android:exported="false"
-            android:foregroundServiceType="mediaProjection" />
+            android:name=".InputService"
+            android:exported="false" />
 
         <provider
             android:name="rikka.shizuku.ShizukuProvider"
