@@ -28,17 +28,11 @@ jobs:
       - name: Build Debug APK
         working-directory: ./RobloxVR
         run: |
-          set +e
-          gradle assembleDebug --no-daemon --stacktrace > /tmp/build.log 2>&1
-          CODE=$?
-          cat /tmp/build.log
-          exit $CODE
+          gradle assembleDebug --no-daemon --stacktrace
 
       - name: Upload APK Artifact
         uses: actions/upload-artifact@v4
         if: always()
         with:
           name: RobloxVR-apk
-          path: |
-            RobloxVR/app/build/outputs/apk/debug/*.apk
-            /tmp/build.log
+          path: RobloxVR/app/build/outputs/apk/debug/*.apk
