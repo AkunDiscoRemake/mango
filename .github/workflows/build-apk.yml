@@ -33,7 +33,7 @@ jobs:
         working-directory: ./RobloxVR
         run: |
           gradle assembleDebug --no-daemon > /tmp/out.txt 2>&1 || true
-          tail -n 25 /tmp/out.txt | while IFS= read -r line; do
+          grep -A 20 -E "(\* What went wrong|FAILURE: Build failed)" /tmp/out.txt | while IFS= read -r line; do
             echo "::error::$line"
           done
           exit 1
