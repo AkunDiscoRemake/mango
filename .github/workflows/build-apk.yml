@@ -25,10 +25,14 @@ jobs:
           gradle-version: '8.5'
           cache-disabled: true
 
+      - name: Accept Android Licenses
+        run: |
+          yes | $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager --licenses || true
+
       - name: Build Debug APK
         working-directory: ./RobloxVR
         run: |
-          gradle assembleDebug --no-daemon --stacktrace
+          ./check_build.sh
 
       - name: Upload APK Artifact
         uses: actions/upload-artifact@v4
