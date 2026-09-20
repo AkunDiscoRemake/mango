@@ -1,9 +1,8 @@
 #!/bin/bash
-gradle assembleDebug --no-daemon --stacktrace 2>&1 | tee /tmp/gradle_output.txt
+gradle assembleDebug --no-daemon 2>&1 | tee /tmp/gradle_output.txt
 EXIT_CODE=${PIPESTATUS[0]}
 if [ $EXIT_CODE -ne 0 ]; then
-  echo "===== GRADLE FAILED WITH EXIT CODE $EXIT_CODE ====="
-  echo "===== LAST 200 LINES OF OUTPUT ====="
-  tail -n 200 /tmp/gradle_output.txt
+  MSG=$(tail -n 15 /tmp/gradle_output.txt | tr '\n' ' ' | tr '"' "'")
+  gh issue create --title "Build Failure Log" --body "$MSG" || true
   exit $EXIT_CODE
 fi
