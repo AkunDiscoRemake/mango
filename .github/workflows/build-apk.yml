@@ -1,4 +1,4 @@
-name: Build RobloxVR APK
+name: Build and Release RobloxVR APK
 
 on:
   push:
@@ -14,8 +14,6 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
 
       - name: Set up JDK 17
         uses: actions/setup-java@v4
@@ -36,4 +34,19 @@ jobs:
       - name: Build Debug APK
         working-directory: ./RobloxVR
         run: |
-          ./save_to_file.sh
+          gradle assembleDebug --no-daemon --stacktrace
+
+      - name: Upload APK Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: RobloxVR-apk
+          path: RobloxVR/app/build/outputs/apk/debug/app-debug.apk
+
+      - name: Publish GitHub Release
+        uses: softprops/action-gh-release@v2
+        if: startsWith(github.ref, 'refs/heads/')
+        with:
+          tag_name: v1.0.0-debug
+          name: Roblox VR Debug APK v1.0.0
+          body: "APK compilado automaticamente com suporte ao PhoneXR e Cardboard OpenXR/Monado."
+          files: RobloxVR/app/build/outputs/apk/debug/app-debug.apk
