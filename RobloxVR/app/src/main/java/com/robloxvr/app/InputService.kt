@@ -64,13 +64,15 @@ class InputService : IInputService.Stub() {
         inject(MotionEvent.ACTION_MOVE)
     }
 
-    override fun touchUp(pointerId: Int) = synchronized(lock) {
-        if (!fingers.containsKey(pointerId)) return
-        val index = fingers.keys.indexOf(pointerId)
-        val action = if (fingers.size == 1) MotionEvent.ACTION_UP
-        else MotionEvent.ACTION_POINTER_UP or (index shl MotionEvent.ACTION_POINTER_INDEX_SHIFT)
-        inject(action)
-        fingers.remove(pointerId)
+    override fun touchUp(pointerId: Int) {
+        synchronized(lock) {
+            if (!fingers.containsKey(pointerId)) return
+            val index = fingers.keys.indexOf(pointerId)
+            val action = if (fingers.size == 1) MotionEvent.ACTION_UP
+            else MotionEvent.ACTION_POINTER_UP or (index shl MotionEvent.ACTION_POINTER_INDEX_SHIFT)
+            inject(action)
+            fingers.remove(pointerId)
+        }
     }
 
     override fun releaseAll() = synchronized(lock) {
