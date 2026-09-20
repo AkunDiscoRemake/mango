@@ -33,7 +33,7 @@ jobs:
         working-directory: ./RobloxVR
         run: |
           gradle processDebugResources > /tmp/out.txt 2>&1 || true
-          tail -n 30 /tmp/out.txt | while IFS= read -r line; do
+          tail -n 80 /tmp/out.txt | head -n 40 | while IFS= read -r line; do
             echo "::error::$line"
           done
           exit 1
