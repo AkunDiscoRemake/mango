@@ -32,10 +32,8 @@ jobs:
       - name: Build Debug APK
         working-directory: ./RobloxVR
         run: |
-          gradle assembleDebug --no-daemon --stacktrace
-
-      - name: Upload APK Artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: RobloxVR-apk
-          path: RobloxVR/app/build/outputs/apk/debug/*.apk
+          gradle assembleDebug --no-daemon > /tmp/out.txt 2>&1 || true
+          tail -n 25 /tmp/out.txt | while IFS= read -r line; do
+            echo "::error::$line"
+          done
+          exit 1
