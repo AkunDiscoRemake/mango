@@ -32,10 +32,11 @@ jobs:
       - name: Build Debug APK
         working-directory: ./RobloxVR
         run: |
-          gradle assembleDebug --no-daemon --stacktrace
-
-      - name: Upload APK Artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: RobloxVR-apk
-          path: RobloxVR/app/build/outputs/apk/debug/*.apk
+          gradle assembleDebug --no-daemon --info > /tmp/raw_gradle.txt 2>&1 || true
+          cat /tmp/raw_gradle.txt | grep -E "(error:|FAILURE|What went wrong|Caused by|compileDebugKotlin)" -A 10 | head -n 40 | while IFS= read -r line; do
+            echo "::error::$line"
+          done
+          cat /tmp/raw_gradle.txt | grep -E "(\.kt:[0-9]+|\.java:[0-9]+)" | head -n 20 | while IFS= read -r line; do
+            echo "::error::$line"
+          done
+          exit 1
