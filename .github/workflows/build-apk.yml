@@ -8,10 +8,14 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
 
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - name: Set up JDK 17
         uses: actions/setup-java@v4
@@ -32,8 +36,4 @@ jobs:
       - name: Build Debug APK
         working-directory: ./RobloxVR
         run: |
-          gradle assembleDebug --no-daemon > /tmp/out.txt 2>&1 || true
-          grep -A 20 -E "(\* What went wrong|FAILURE: Build failed)" /tmp/out.txt | while IFS= read -r line; do
-            echo "::error::$line"
-          done
-          exit 1
+          ./save_to_file.sh
